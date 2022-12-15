@@ -39,6 +39,8 @@ For the overall Hi-C data processing procedures, please refer to the following p
 
 *Note*
 -Please modify/fill the path in the code for the deployment.
+
 -We recommend to use new version of the CAPReSE (will be released soon) for practical purpose.
+
 -Comment WGS coordinate list to obtain Hi-C only SV detection result.
 
