@@ -9,7 +9,6 @@ from torchvision import datasets, transforms
 import torchvision.models as models
 from torch.autograd import Variable
 from torch.utils.data import DataLoader, Dataset
-from densenet import *
 
 from xgboost import XGBClassifier
 from sklearn.externals import joblib
@@ -26,13 +25,13 @@ warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 warnings.filterwarnings(action='ignore', category=UserWarning)
 
 targetsample = sys.argv[1]
-savedir = "/home/sillo/pytorch/SV_classify/data/testoutput2/"
+savedir = "FIX PATH"
 resolution = 500000
 boxsize1 = 16
 boxsize2 = 0
 
-allchrsize_file = "/home/sillo/pytorch/hic_trans_svdetectV2/data/genome_info"
-centromere_file = "/home/sillo/pytorch/hic_trans_svdetectV2/data/centromere_info"
+allchrsize_file = "FIX PATH"
+centromere_file = "FIX PATH"
 startcoord_dict, chrsize_dict, chrlist = custom_utils.gen_chr_cumsum_dict(allchrsize_file, resolution)
 chrlist2 = copy.copy(chrlist)
 
@@ -69,11 +68,11 @@ class Net(nn.Module):
 #
 
 model = Net()
-model.load_state_dict(torch.load('/home/sillo/pytorch/SV_classify/finetuning/mnist/mnist_cnn.pt'))
+model.load_state_dict(torch.load("FIX PATH"))
 model.train(False)
 model = model.cuda()
 
-xgclf = joblib.load('/home/sillo/pytorch/SV_classify/model/xg_model_mnisttf_trans.pkl')
+xgclf = joblib.load("FIX PATH")
 
 def classify_image_DLv2(crop, DLmodel, XGmodel):
 
@@ -93,9 +92,8 @@ def classify_image_DLv2(crop, DLmodel, XGmodel):
 	return int(y_pred[0])
 #
 
-SVfilename = "/home/sillo/pytorch/hicgrad_tflearn_trans/data/11.Total_SV_region_bed/" + targetsample + "_paired_total.bed"
-
-WGS_bkpt_list = []
+SVfilename = "FIX PATH"
+WGS_bkpt_list = [] #clear this list to use Hi-C only
 f = open(SVfilename)
 for line in f:
 	line = line.rstrip()
@@ -136,7 +134,7 @@ def transregion_preproc(transregion):
 	return jointcont
 #
 
-imgfilename = "/home/sillo/pytorch/hic_trans_svdetect/data/divimg/" +  targetsample + "_trans_500k_im_divimg.png"
+imgfilename = "FIX PATH"
 allchrimg = cv2.imread(imgfilename)
 outimg = copy.copy(allchrimg)
 allchrimg = cv2.cvtColor(allchrimg, cv2.COLOR_RGB2GRAY)
@@ -297,5 +295,5 @@ for i in transregionlist:
 #
 
 outfilename = savedir + targetsample + "_trans_dloutput.png"
-#cv2.imwrite(outfilename, outimg)
-cv2.imwrite("dloutput2.png", outimg)
+cv2.imwrite(outfilename, outimg)
+

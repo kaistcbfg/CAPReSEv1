@@ -9,7 +9,6 @@ from torchvision import datasets, transforms
 import torchvision.models as models
 from torch.autograd import Variable
 from torch.utils.data import DataLoader, Dataset
-from densenet import *
 
 from xgboost import XGBClassifier
 from sklearn.externals import joblib
@@ -29,7 +28,7 @@ targetchr = sys.argv[2]
 inputfile = sys.argv[3]
 saveimg = sys.argv[4]
 
-savedir = "/home/sillo/pytorch/SV_classify/data/testoutput/"
+savedir = "FIX PATH"
 resolution = 20000
 boxsize1 = 16
 boxsize2 = 2
@@ -68,11 +67,11 @@ class Net(nn.Module):
 #
 
 model = Net()
-model.load_state_dict(torch.load('/home/sillo/pytorch/SV_classify/finetuning/mnist/mnist_cnn.pt'))
+model.load_state_dict(torch.load("FIX PATH"))
 model.train(False)
 model = model.cuda()
 
-xgclf = joblib.load('/home/sillo/pytorch/SV_classify/model/xg_model_mnisttf2.pkl')
+xgclf = joblib.load("FIX PATH")
 #"""
 def classify_image_DLv2(crop, DLmodel, XGmodel):
 
@@ -93,10 +92,10 @@ def classify_image_DLv2(crop, DLmodel, XGmodel):
 #
 #if not os.path.exists(savedir + targetsample): os.mkdir(savedir + targetsample)
 
-SVfilename = "/home/sillo/pytorch/hicgrad_tflearn_trans/data/11.Total_SV_region_bed/" + targetsample + "_paired_total.bed"
+SVfilename = "FIX PATH"
 
 WGS_bkpt_list = []
-"""
+""" # Uncomment here to add WGS info
 f = open(SVfilename)
 for line in f:
 	line = line.rstrip()
@@ -116,8 +115,6 @@ for line in f:
 f.close()
 #"""
 
-#imgfilename = "/home/sillo/pytorch/hic_svdetect/data/img20k40sample/" + targetsample + "_" + targetchr + "_cis_20000_panznormdiv.png"
-#imgfilename = '/home/sillo/pytorch/SV_classify/dil/chr8_dil_1.0.png'
 img = cv2.imread(inputfile)
 outimg = copy.copy(img)
 img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -295,6 +292,4 @@ for bkpt in WGS_bkpt_list:
 	#
 #
 
-outfilename = savedir = "/home/sillo/pytorch/SV_classify/data/testoutput/" + targetsample + "_" + targetchr + "_dloutput.png"
-#cv2.imwrite(outfilename, outimg)
 cv2.imwrite(saveimg, outimg)
