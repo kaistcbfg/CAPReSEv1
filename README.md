@@ -14,6 +14,18 @@ Will be registered at the Korea Copyright Commission in accordance with Article 
 Developed by Kyukwang Kim & Inkyung Jung, KAIST Dept. of Biological Sciences.
 For commercial use of the software, please contact the authors.
 
+## Requirements
+Following software/packages are required.
+
+ - Python 2.7
+  - numpy
+  - scipy
+  - cv2
+  - PIL
+  - torch
+  - xgboost
+  - sklearn
+
 ## Sample Data and Input Format
 Example input image and model binary files can be downloaded with:
 ```bash
@@ -23,7 +35,45 @@ wget http://junglab.kaist.ac.kr/Dataset/mnist_cnn.pt #Pretrained CNN weights
 wget http://junglab.kaist.ac.kr/Dataset/xg_model_cis.pkl #XGBoost weight for cis- SV
 wget http://junglab.kaist.ac.kr/Dataset/xg_model_trans.pkl #XGBoost weight for trans- SV
 ``` 
-Tumor Hi-C contact map was divided by the control (pan-normal) Hi-C contact map (pseudocount added). Depth of the contact maps were pre-scaled by adjusting their mean and standard devidations to average values. Input image was scaled to n-fold and converted to np.uint8 array for OpenCV processing. Please check our publication for details.
+
+Following example codes shows how input image files are generated.
+```bash
+wget http://junglab.kaist.ac.kr/Dataset/SNUCRC_16-178T_chr8_cis20kb.pkl.gz # Tumor Hi-C contact map
+wget http://junglab.kaist.ac.kr/Dataset/pannorm_chr8_example.pkl.gz # Pan-Normal Hi-C contact map
+# pickle files generated using python 2.7
+``` 
+Tumor Hi-C contact map was divided by the control (pan-normal) Hi-C contact map (pseudocount added). Depth of the contact maps were pre-scaled by adjusting their mean and standard devidations to average values. Input image was scaled to n-fold and converted to np.uint8 array for OpenCV processing.
+```python
+import numpy as np
+import cv2
+
+import pickle
+import gzip
+import sys
+
+tumormap = sys.argv[1] 
+pannorm  = sys.argv[2]
+output_imgname = sys.argv[3]
+
+target_map_raw  = pickle.load(gzip.open(tumormap))
+pannorm_map = pickle.load(gzip.open(pannorm))
+
+st_mean = np.mean(pannorm_map)
+st_std  = np.std(pannorm_map)
+target_map_zs = (target_map_raw - np.mean(target_map_raw))/np.std(target_map_raw) # z-score conversion
+
+target_map_rs = (target_map_zs * st_std) + st_mean
+target_map_div = target_map_rs/(pannorm_map + 1)
+target_map_div[target_map_div <= 0] = 0 # re-scale z-score map with standard mean/std
+
+target_map = np.clip(target_map_div, 0, 5)
+target_map = (target_map * 51).astype(np.uint8)
+cv2.imwrite(output_imgname,target_map) # 0-255 scale python cv2 image conversion
+``` 
+Running the example script will generate output image for the SV detection.
+```bash
+python example_script.py SNUCRC_16-178T_chr8_cis20kb.pkl.gz pannorm_chr8_example.pkl.gz test.png
+``` 
 
 For the overall Hi-C data processing procedures, please refer to the following papers.
 
@@ -38,10 +88,9 @@ For the overall Hi-C data processing procedures, please refer to the following p
 > doi: https://doi.org/10.1093/nar/gkaa1078
 
 *Note*
-
--Please modify/fill the path in the code for the deployment.
-
+-Please modify/fill the "FIX PATH" (downloaded weight files, WGS SV list, and info files) in the code for the deployment.
 -We recommend to use new version of the CAPReSE (will be released soon) for practical purpose.
-
 -Comment WGS coordinate list to obtain Hi-C only SV detection result.
-
+```bash
+python deploy_cis.py SNUCRC_16-178T_chr8_pannormdiv.png SVcall.png
+``` 

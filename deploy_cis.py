@@ -23,10 +23,8 @@ import warnings
 warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 warnings.filterwarnings(action='ignore', category=UserWarning)
 
-targetsample = sys.argv[1]
-targetchr = sys.argv[2]
-inputfile = sys.argv[3]
-saveimg = sys.argv[4]
+inputfile = sys.argv[1]
+saveimg = sys.argv[2]
 
 savedir = "FIX PATH"
 resolution = 20000

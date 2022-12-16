@@ -24,7 +24,9 @@ import warnings
 warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 warnings.filterwarnings(action='ignore', category=UserWarning)
 
-targetsample = sys.argv[1]
+inputfile = sys.argv[1]
+saveimg = sys.argv[2]
+
 savedir = "FIX PATH"
 resolution = 500000
 boxsize1 = 16
@@ -135,7 +137,8 @@ def transregion_preproc(transregion):
 #
 
 imgfilename = "FIX PATH"
-allchrimg = cv2.imread(imgfilename)
+allchrimg = cv2.imread(inputfile)
+#allchrimg = cv2.imread(imgfilename)
 outimg = copy.copy(allchrimg)
 allchrimg = cv2.cvtColor(allchrimg, cv2.COLOR_RGB2GRAY)
 
@@ -294,6 +297,6 @@ for i in transregionlist:
 	#
 #
 
-outfilename = savedir + targetsample + "_trans_dloutput.png"
-cv2.imwrite(outfilename, outimg)
+#outfilename = savedir + targetsample + "_trans_dloutput.png"
+cv2.imwrite(saveimg, outimg)
 
