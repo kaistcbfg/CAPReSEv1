@@ -88,9 +88,9 @@ For the overall Hi-C data processing procedures, please refer to the following p
 > doi: https://doi.org/10.1093/nar/gkaa1078
 
 *Note*
--Please modify/fill the "FIX PATH" (downloaded weight files, WGS SV list, and info files) in the code for the deployment.
--We recommend to use new version of the CAPReSE (will be released soon) for practical purpose.
--Comment WGS coordinate list to obtain Hi-C only SV detection result.
+ - Please modify/fill the "FIX PATH" (downloaded weight files, WGS SV list, and info files) in the code for the deployment.
+ - We recommend to use new version of the CAPReSE (will be released soon) for practical purpose.
+ - Comment WGS coordinate list to obtain Hi-C only SV detection result.
 ```bash
-python deploy_cis.py SNUCRC_16-178T_chr8_pannormdiv.png SVcall.png
+python deploy_cis.py SNUCRC_16-178T_chr8_pannormdiv.png SVcall.png #Example run
 ``` 
